@@ -6,6 +6,7 @@
 <title>Convite</title>
 
 <style>
+
 body{
     margin:0;
     height:100vh;
@@ -18,30 +19,43 @@ body{
     flex-direction:column;
 }
 
+/* Área principal */
 #viewer{
     flex:1;
     position:relative;
     cursor:pointer;
 }
 
-/* Imagens */
-img{
+/* Frames das imagens */
+.frame{
     position:absolute;
     width:100%;
     height:100%;
-    object-fit:contain;
     top:0;
     left:0;
     opacity:0;
     transition:opacity 0.8s ease;
 }
 
-/* Zoom forte na última imagem */
-#img2.active{
-    object-fit:cover;
-    transform:scale(1.25);
+.frame img{
+    width:100%;
+    height:100%;
+    object-fit:contain;
 }
 
+.active{
+    opacity:1;
+}
+
+/* ZOOM AUTOMÁTICO REAL na última imagem */
+#img2.active img{
+    animation:zoomFinal 6s ease forwards;
+}
+
+@keyframes zoomFinal{
+    from { transform:scale(1); }
+    to   { transform:scale(1.35); }
+}
 
 /* Barra inferior */
 #hintBar{
@@ -55,6 +69,7 @@ img{
     font-weight:bold;
     color:#d81b60;
 }
+
 </style>
 </head>
 
@@ -62,15 +77,22 @@ img{
 
 <div id="viewer" onclick="handleClick()">
 
-    <img src="img1.png" id="img0" class="active">
-    <img src="img2.png" id="img1">
-    <img src="img3.png" id="img2">
+    <div class="frame active" id="img0">
+        <img src="img1.png">
+    </div>
+
+    <div class="frame" id="img1">
+        <img src="img2.png">
+    </div>
+
+    <div class="frame" id="img2">
+        <img src="img3.png">
+    </div>
 
 </div>
 
 <div id="hintBar">Toque para abrir o convite ✨</div>
 
-<!-- AUDIO -->
 <audio id="bgMusic" src="musica.mp3" preload="auto"></audio>
 
 <script>
@@ -86,42 +108,49 @@ const endTime = 41;
 
 function handleClick(){
 
-    // Se estiver no final → reinicia
     if(started && current === total-1){
         resetSequence();
         return;
     }
 
-    // Primeiro toque
     if(!started){
         started = true;
         document.getElementById("hintBar").style.visibility="hidden";
-
         startMusic();
         runSequence();
     }
 }
 
 function runSequence(){
+
     if(current >= total-1) return;
 
     setTimeout(()=>{
-        document.getElementById("img"+(current+1)).classList.add("active");
+
+        document.getElementById("img"+current)
+            .classList.remove("active");
+
         current++;
+
+        document.getElementById("img"+current)
+            .classList.add("active");
+
         runSequence();
+
     }, delay);
 }
 
 function resetSequence(){
 
-    for(let i=0;i<total;i++){
-        document.getElementById("img"+i).classList.remove("active");
-    }
+    document.getElementById("img"+current)
+        .classList.remove("active");
 
     current = 0;
     started = false;
 
-    document.getElementById("img0").classList.add("active");
+    document.getElementById("img0")
+        .classList.add("active");
+
     document.getElementById("hintBar").style.visibility="visible";
 
     music.pause();
