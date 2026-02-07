@@ -39,7 +39,6 @@ body{
     width:100%;
     height:100%;
     object-fit:contain;
-    transform-origin:center center;
 }
 
 .active{
@@ -75,7 +74,11 @@ body{
     </div>
 
     <div class="frame" id="img2">
-        <img src="img3.png" id="finalImg">
+        <img src="img3.png">
+    </div>
+
+    <div class="frame" id="img3">
+        <img src="img4.png">
     </div>
 
 </div>
@@ -88,17 +91,17 @@ body{
 
 let started = false;
 let current = 0;
-const total = 3;
+const total = 4;     // ⭐ atualizado
 const delay = 2000;
 
 const music = document.getElementById("bgMusic");
-const finalImg = document.getElementById("finalImg");
 
 const startTime = 10;
 const endTime = 41;
 
 function handleClick(){
 
+    // Reiniciar ao clicar na última
     if(started && current === total-1){
         resetSequence();
         return;
@@ -114,36 +117,19 @@ function handleClick(){
 
 function runSequence(){
 
-    if(current >= total-1){
-        startZoom();   // 🔥 FORÇA O ZOOM
-        return;
-    }
+    if(current >= total-1) return;
 
     setTimeout(()=>{
 
         document.getElementById("img"+current).classList.remove("active");
+
         current++;
+
         document.getElementById("img"+current).classList.add("active");
 
         runSequence();
 
     }, delay);
-}
-
-/* ⭐ ZOOM PROGRESSIVO REAL */
-function startZoom(){
-
-    let scale = 1;
-
-    const zoom = setInterval(()=>{
-        scale += 0.01;
-        finalImg.style.transform = `scale(${scale})`;
-
-        if(scale >= 1.5){
-            clearInterval(zoom);
-        }
-
-    }, 30);
 }
 
 function resetSequence(){
@@ -152,8 +138,6 @@ function resetSequence(){
 
     current = 0;
     started = false;
-
-    finalImg.style.transform="scale(1)";
 
     document.getElementById("img0").classList.add("active");
     document.getElementById("hintBar").style.visibility="visible";
