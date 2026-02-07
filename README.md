@@ -33,8 +33,12 @@ img{
     top:0;
     left:0;
     opacity:0;
-    transition:opacity 0.8s ease;
+    transition:opacity 0.8s ease, transform 1.2s ease;
 }
+
+/* Zoom na última imagem */
+#img2.active{
+    transform: scale(1.35);
 
 .active{
     opacity:1;
