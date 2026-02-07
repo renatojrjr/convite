@@ -14,12 +14,10 @@ body{
     background-image:url("fundo.png");
     background-size:cover;
     background-position:center;
-    background-repeat:no-repeat;
     display:flex;
     flex-direction:column;
 }
 
-/* Área principal */
 #viewer{
     flex:1;
     position:relative;
@@ -37,26 +35,15 @@ body{
     transition:opacity 0.8s ease;
 }
 
-/* Padrão imagens */
 .frame img{
     width:100%;
     height:100%;
     object-fit:contain;
+    transform-origin:center center;
 }
 
 .active{
     opacity:1;
-}
-
-/* 🔥 ZOOM REAL VISÍVEL */
-#img2.active img{
-    object-fit:cover;
-    animation:zoomFinal 7s ease forwards;
-}
-
-@keyframes zoomFinal{
-    from { transform:scale(1.0); }
-    to   { transform:scale(1.6); }
 }
 
 /* Barra inferior */
@@ -88,7 +75,7 @@ body{
     </div>
 
     <div class="frame" id="img2">
-        <img src="img3.png">
+        <img src="img3.png" id="finalImg">
     </div>
 
 </div>
@@ -105,6 +92,8 @@ const total = 3;
 const delay = 2000;
 
 const music = document.getElementById("bgMusic");
+const finalImg = document.getElementById("finalImg");
+
 const startTime = 10;
 const endTime = 41;
 
@@ -125,19 +114,36 @@ function handleClick(){
 
 function runSequence(){
 
-    if(current >= total-1) return;
+    if(current >= total-1){
+        startZoom();   // 🔥 FORÇA O ZOOM
+        return;
+    }
 
     setTimeout(()=>{
 
         document.getElementById("img"+current).classList.remove("active");
-
         current++;
-
         document.getElementById("img"+current).classList.add("active");
 
         runSequence();
 
     }, delay);
+}
+
+/* ⭐ ZOOM PROGRESSIVO REAL */
+function startZoom(){
+
+    let scale = 1;
+
+    const zoom = setInterval(()=>{
+        scale += 0.01;
+        finalImg.style.transform = `scale(${scale})`;
+
+        if(scale >= 1.5){
+            clearInterval(zoom);
+        }
+
+    }, 30);
 }
 
 function resetSequence(){
@@ -146,6 +152,8 @@ function resetSequence(){
 
     current = 0;
     started = false;
+
+    finalImg.style.transform="scale(1)";
 
     document.getElementById("img0").classList.add("active");
     document.getElementById("hintBar").style.visibility="visible";
