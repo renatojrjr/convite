@@ -33,16 +33,15 @@ img{
     top:0;
     left:0;
     opacity:0;
-    transition:opacity 0.8s ease, transform 1.2s ease;
+    transition:opacity 0.8s ease;
 }
 
-/* Zoom na última imagem */
+/* Zoom forte na última imagem */
 #img2.active{
-    transform: scale(1.35);
-
-.active{
-    opacity:1;
+    object-fit:cover;
+    transform:scale(1.25);
 }
+
 
 /* Barra inferior */
 #hintBar{
