@@ -26,7 +26,7 @@ body{
     cursor:pointer;
 }
 
-/* Frames das imagens */
+/* Frames */
 .frame{
     position:absolute;
     width:100%;
@@ -37,6 +37,7 @@ body{
     transition:opacity 0.8s ease;
 }
 
+/* Padrão imagens */
 .frame img{
     width:100%;
     height:100%;
@@ -47,14 +48,15 @@ body{
     opacity:1;
 }
 
-/* ZOOM AUTOMÁTICO REAL na última imagem */
+/* 🔥 ZOOM REAL VISÍVEL */
 #img2.active img{
-    animation:zoomFinal 6s ease forwards;
+    object-fit:cover;
+    animation:zoomFinal 7s ease forwards;
 }
 
 @keyframes zoomFinal{
-    from { transform:scale(1); }
-    to   { transform:scale(1.35); }
+    from { transform:scale(1.0); }
+    to   { transform:scale(1.6); }
 }
 
 /* Barra inferior */
@@ -127,13 +129,11 @@ function runSequence(){
 
     setTimeout(()=>{
 
-        document.getElementById("img"+current)
-            .classList.remove("active");
+        document.getElementById("img"+current).classList.remove("active");
 
         current++;
 
-        document.getElementById("img"+current)
-            .classList.add("active");
+        document.getElementById("img"+current).classList.add("active");
 
         runSequence();
 
@@ -142,15 +142,12 @@ function runSequence(){
 
 function resetSequence(){
 
-    document.getElementById("img"+current)
-        .classList.remove("active");
+    document.getElementById("img"+current).classList.remove("active");
 
     current = 0;
     started = false;
 
-    document.getElementById("img0")
-        .classList.add("active");
-
+    document.getElementById("img0").classList.add("active");
     document.getElementById("hintBar").style.visibility="visible";
 
     music.pause();
@@ -160,7 +157,6 @@ function resetSequence(){
 function startMusic(){
 
     music.currentTime = startTime;
-
     music.play().catch(()=>{});
 
     music.ontimeupdate = () => {
