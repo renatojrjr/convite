@@ -1,1 +1,144 @@
-# convite
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Convite</title>
+
+<style>
+body{
+    margin:0;
+    height:100vh;
+    overflow:hidden;
+    background-image:url("fundo.png");
+    background-size:cover;
+    background-position:center;
+    background-repeat:no-repeat;
+    display:flex;
+    flex-direction:column;
+}
+
+#viewer{
+    flex:1;
+    position:relative;
+    cursor:pointer;
+}
+
+/* Imagens */
+img{
+    position:absolute;
+    width:100%;
+    height:100%;
+    object-fit:contain;
+    top:0;
+    left:0;
+    opacity:0;
+    transition:opacity 0.8s ease;
+}
+
+.active{
+    opacity:1;
+}
+
+/* Barra inferior */
+#hintBar{
+    height:70px;
+    background:#ffe3f1cc;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-family:Arial;
+    font-size:22px;
+    font-weight:bold;
+    color:#d81b60;
+}
+</style>
+</head>
+
+<body>
+
+<div id="viewer" onclick="handleClick()">
+
+    <img src="img1.png" id="img0" class="active">
+    <img src="img2.png" id="img1">
+    <img src="img3.png" id="img2">
+
+</div>
+
+<div id="hintBar">Toque para abrir o convite ✨</div>
+
+<!-- AUDIO -->
+<audio id="bgMusic" src="musica.mp3" preload="auto"></audio>
+
+<script>
+
+let started = false;
+let current = 0;
+const total = 3;
+const delay = 2000;
+
+const music = document.getElementById("bgMusic");
+const startTime = 10;
+const endTime = 41;
+
+function handleClick(){
+
+    // Se estiver no final → reinicia
+    if(started && current === total-1){
+        resetSequence();
+        return;
+    }
+
+    // Primeiro toque
+    if(!started){
+        started = true;
+        document.getElementById("hintBar").style.visibility="hidden";
+
+        startMusic();
+        runSequence();
+    }
+}
+
+function runSequence(){
+    if(current >= total-1) return;
+
+    setTimeout(()=>{
+        document.getElementById("img"+(current+1)).classList.add("active");
+        current++;
+        runSequence();
+    }, delay);
+}
+
+function resetSequence(){
+
+    for(let i=0;i<total;i++){
+        document.getElementById("img"+i).classList.remove("active");
+    }
+
+    current = 0;
+    started = false;
+
+    document.getElementById("img0").classList.add("active");
+    document.getElementById("hintBar").style.visibility="visible";
+
+    music.pause();
+    music.currentTime = startTime;
+}
+
+function startMusic(){
+
+    music.currentTime = startTime;
+
+    music.play().catch(()=>{});
+
+    music.ontimeupdate = () => {
+        if(music.currentTime >= endTime){
+            music.currentTime = startTime;
+        }
+    };
+}
+
+</script>
+
+</body>
+</html>
